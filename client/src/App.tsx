@@ -14,7 +14,7 @@ function App() {
   const [pageCount, setPageCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  const fetchOrders = () => {
     setIsLoading(true);
     // Current page index is 0-based, API expects 1-based
     getOrders(pagination.pageIndex + 1, pagination.pageSize)
@@ -24,6 +24,10 @@ function App() {
       })
       .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    fetchOrders();
   }, [pagination.pageIndex, pagination.pageSize]);
 
 
@@ -42,7 +46,7 @@ function App() {
     },
     {
       accessorKey: 'subType',
-      header: 'Syb Type',
+      header: 'Sub Type',
     },
     {
       accessorKey: 'project',
@@ -115,8 +119,9 @@ function App() {
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-start md:p-8 overflow-hidden">
-      <div className="flex flex-col items-end justify-center pb-5 shrink-0">
-        <h1 className="text-2xl md:text-3xl font-bold text-brand-text">EMAAR MISR Work Orders</h1>
+      <div className="flex flex-col items-center gap-5 justify-center pb-5 shrink-0">
+        <h1 className="text-2xl md:text-3xl font-bold text-brand-text">EMAAR MISR</h1>
+        <h1 className="text-xl md:text-xl font-bold text-brand-text">Work Orders</h1>
       </div>
       <div className="w-full max-w-full flex-1 flex flex-col items-center gap-6 overflow-hidden">
         <DataTable
@@ -125,6 +130,7 @@ function App() {
           pageCount={pageCount}
           pagination={pagination}
           onPaginationChange={setPagination}
+          onRefresh={fetchOrders}
           isLoading={isLoading}
           initialColumnVisibility={{
             id: false,

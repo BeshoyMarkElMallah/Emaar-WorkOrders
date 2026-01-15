@@ -15,7 +15,7 @@ import type {
     OnChangeFn,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import { Settings2, ChevronDown, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Settings2, ChevronDown, ArrowUpDown, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { LoadingSpinner } from './LoadingSpinner';
 
@@ -25,6 +25,7 @@ interface DataTableProps<TData, TValue> {
     pageCount: number;
     pagination: PaginationState;
     onPaginationChange: OnChangeFn<PaginationState>;
+    onRefresh?: () => void;
     initialColumnVisibility?: VisibilityState;
     isLoading?: boolean;
 }
@@ -35,6 +36,7 @@ export function DataTable<TData, TValue>({
     pageCount,
     pagination,
     onPaginationChange,
+    onRefresh,
     initialColumnVisibility = {},
     isLoading = false,
 }: DataTableProps<TData, TValue>) {
@@ -81,16 +83,18 @@ export function DataTable<TData, TValue>({
     return (
         <div className="space-y-4 w-full h-full flex flex-col">
             <div className="flex items-center justify-between gap-4 shrink-0">
-                {/* Search Input */}
-                {/* <div className="relative max-w-sm w-full">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-brand-text opacity-50" />
-                    <input
-                        placeholder="Search..."
-                        value={globalFilter ?? ""}
-                        onChange={(event) => setGlobalFilter(event.target.value)}
-                        className="pl-8 h-10 w-full rounded-md border border-brand-light bg-brand-medium px-3 py-2 text-sm text-brand-text ring-offset-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-light focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-brand-text/50"
-                    />
-                </div> */}
+                {/* Refresh Button */}
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={onRefresh}
+                        disabled={isLoading}
+                        className="flex items-center gap-2 px-3 py-2 bg-brand-medium border border-brand-light text-brand-text rounded-md shadow-sm hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-light disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        title="Refresh data"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                        <span>Refresh</span>
+                    </button>
+                </div>
 
                 {/* Column Visibility Toggle */}
                 <div className="relative w-full flex flex-col items-end">

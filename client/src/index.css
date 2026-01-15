@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-dark: #0F2854;
-  --color-brand-medium: #1C4D8D;
-  --color-brand-light: #4988C4;
-  --color-brand-text: #BDE8F5;
+  --color-brand-dark: #07122a;
+  --color-brand-medium: #091f3e;
+  --color-brand-light: #1b7ef2;
+  --color-brand-text: #ffffff;
+  --font-sans: "Inter";
 }
 
 @layer base {
   :root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: var(--font-sans);
     line-height: 1.5;
     font-weight: 400;
 
