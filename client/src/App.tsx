@@ -13,6 +13,7 @@ function App() {
   });
   const [pageCount, setPageCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalORders, setTotalOrders] = useState(0);
 
   const fetchOrders = () => {
     setIsLoading(true);
@@ -21,6 +22,7 @@ function App() {
       .then((data) => {
         setOrders(data.orders);
         setPageCount(data.pagination.totalPages);
+        setTotalOrders(data.pagination.total);
       })
       .catch((err) => console.log(err))
       .finally(() => setIsLoading(false));
@@ -128,6 +130,7 @@ function App() {
           columns={columns}
           data={orders}
           pageCount={pageCount}
+          totalOrders={totalORders}
           pagination={pagination}
           onPaginationChange={setPagination}
           onRefresh={fetchOrders}

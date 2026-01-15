@@ -23,6 +23,7 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     pageCount: number;
+    totalOrders: number;
     pagination: PaginationState;
     onPaginationChange: OnChangeFn<PaginationState>;
     onRefresh?: () => void;
@@ -34,6 +35,7 @@ export function DataTable<TData, TValue>({
     columns,
     data,
     pageCount,
+    totalOrders,
     pagination,
     onPaginationChange,
     onRefresh,
@@ -218,7 +220,7 @@ export function DataTable<TData, TValue>({
             {/* Pagination */}
             <div className="flex items-center justify-between px-2 shrink-0 py-4">
                 <div className="text-sm text-brand-text/70">
-                    {table.getFilteredRowModel().rows.length} row(s) total
+                    {totalOrders} Total Work Orders
                 </div>
                 <div className="flex items-center space-x-2">
                     <button
