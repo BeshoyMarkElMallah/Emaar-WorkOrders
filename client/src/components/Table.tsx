@@ -86,7 +86,7 @@ export function DataTable<TData, TValue>({
     const onRowClick = (rowId: string) => {
         const row = table.getRow(rowId);
         const rowData: Order = row.original as Order;
-        console.log(rowData.action);
+        console.log(rowData);
 
 
     }
@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
                     </button>
 
                     {isColumnDropdownOpen && (
-                        <div className="absolute right-0 top-12 z-50 w-56 bg-brand-medium border border-brand-light rounded-md shadow-lg p-2">
+                        <div className="absolute right-0 top-12 z-50 w-[25vh] bg-brand-medium border border-brand-light rounded-md shadow-lg p-2 max-h-[50vh] overflow-y-scroll">
                             <div className="mb-2 text-sm font-medium text-brand-text px-2">Toggle Columns</div>
                             {table.getAllLeafColumns().map((column) => {
                                 return (

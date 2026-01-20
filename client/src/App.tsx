@@ -81,23 +81,56 @@ function App() {
       header: 'Asset ID',
     },
     {
-      accessorKey: 'action',
-      header: 'Action',
+      accessorKey: "TimeOut",
+      header: "Time Out",
       cell: ({ row }) => {
-        const action = row.getValue('action') as string;
-        const isCleared = action?.toLowerCase() === 'cleared';
-        const isGenerated = action?.toLowerCase() === 'generated';
+        const endTime = row.original.endTime;
 
-        return (
-          <span className={`
-            inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
-            ${isCleared ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-              isGenerated ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                'bg-brand-medium text-brand-text border border-brand-light'}
-          `}>
-            {action}
-          </span>
-        );
+        if (!endTime) return '-';
+
+        // Remove 'Z' to treat the time as Local Time, not UTC
+        const localEndTimeString = endTime.replace('Z', '');
+        const endDate = new Date(localEndTimeString);
+        const now = new Date();
+
+        // Calculate time difference in milliseconds
+        const diffMs = now.getTime() - endDate.getTime();
+
+        // Convert to hours and minutes
+        const diffMinutes = Math.floor(Math.abs(diffMs) / 60000);
+        const hours = Math.floor(diffMinutes / 60);
+        const minutes = diffMinutes % 60;
+
+        // Format the display
+        let timeDisplay = '';
+        if (hours > 0) {
+          timeDisplay = `${hours}h ${minutes}m`;
+        } else {
+          timeDisplay = `${minutes}m`;
+        }
+
+        // If current time is past endTime (overdue)
+        if (diffMs > 0) {
+          // Color coding based on how overdue
+          const colorClass = hours >= 1
+            ? 'text-red-400'
+            : minutes >= 30
+              ? 'text-yellow-400'
+              : 'text-orange-400';
+
+          return (
+            <span className={`font-semibold ${colorClass} `}>
+              +{timeDisplay}
+            </span>
+          );
+        } else {
+          // Still has time remaining (not yet overdue)
+          return (
+            <span className="font-semibold text-blue-400">
+              -{timeDisplay}
+            </span>
+          );
+        }
       },
     },
     {
@@ -110,22 +143,46 @@ function App() {
       },
     },
     {
-      accessorKey: 'cleared_at',
-      header: 'Cleared At',
+      accessorKey: 'endTime',
+      header: 'Expected End Time',
       cell: ({ row }) => {
-        const dateStr = row.getValue('cleared_at') as string;
-        if (!dateStr) return '-';
-        return new Date(dateStr).toUTCString();
+        const endTime = row.getValue('endTime') as string;
+        if (!endTime) return '-';
+        return new Date(endTime).toUTCString();
       },
     },
-    {
-      accessorKey: 'sf_response',
-      header: 'SF Response',
-    },
-    {
-      accessorKey: 'is_active',
-      header: 'Is Active',
-    },
+    // {
+    //   accessorKey: 'action',
+    //   header: 'Action',
+    //   cell: ({ row }) => {
+    //     const action = row.getValue('action') as string;
+    //     const isCleared = action?.toLowerCase() === 'cleared';
+    //     const isGenerated = action?.toLowerCase() === 'generated';
+
+    //     return (
+    //       <span className={`
+    //         inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+    //         ${isCleared ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+    //           isGenerated ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+    //             'bg-brand-medium text-brand-text border border-brand-light'}
+    //       `}>
+    //         {action}
+    //       </span>
+    //     );
+    //   },
+    // },
+
+    // {
+    //   accessorKey: 'cleared_at',
+    //   header: 'Cleared At',
+    //   cell: ({ row }) => {
+    //     const dateStr = row.getValue('cleared_at') as string;
+    //     if (!dateStr) return '-';
+    //     return new Date(dateStr).toUTCString();
+    //   },
+    // },
+
+
 
   ], []);
 
@@ -147,13 +204,11 @@ function App() {
           isLoading={isLoading}
           initialColumnVisibility={{
             id: false,
-            asset_id: false,
             sf_response: false,
             cleared_at: false,
-            probCode: false,
             subType: false,
-            description: false,
             is_active: false,
+            action: false
           }}
         />
       </div>

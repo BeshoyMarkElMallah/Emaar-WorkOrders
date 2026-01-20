@@ -36,7 +36,9 @@ export const getAllOrders = async (
 
 
     const total = await dbService.executeQuery<TotalOrders>(
-      `SELECT COUNT(*)  AS Total FROM tickets`
+      `SELECT COUNT(*)  AS Total FROM tickets
+        WHERE action = 'Generated'  AND CURRENT_TIMESTAMP >  endTime
+      `
     );
 
     if (page > Math.ceil(Number(total[0].Total) / pageSize)) {
@@ -48,6 +50,7 @@ export const getAllOrders = async (
 
     const orders = await dbService.executeQuery<Orders>(
       `SELECT * FROM tickets
+      WHERE action = 'Generated'  AND CURRENT_TIMESTAMP >  endTime
       ORDER BY generated_at DESC
       OFFSET ${skip} ROWS FETCH NEXT ${pageSize} ROWS ONLY`
     );

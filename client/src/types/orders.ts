@@ -19,6 +19,9 @@ export interface Order {
     cleared_at: string;
     sf_response: string;
     is_active: boolean;
+    endTime: string;
+    SLA: string;
+    TimeOut: string;
 }
 
 
