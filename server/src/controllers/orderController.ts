@@ -51,7 +51,7 @@ export const getAllOrders = async (
     const orders = await dbService.executeQuery<Orders>(
       `SELECT * FROM tickets
       WHERE action = 'Generated'  AND CURRENT_TIMESTAMP >  endTime
-      ORDER BY generated_at DESC
+      ORDER BY endTime ASC
       OFFSET ${skip} ROWS FETCH NEXT ${pageSize} ROWS ONLY`
     );
 
