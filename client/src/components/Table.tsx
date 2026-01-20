@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { Settings2, ChevronDown, ArrowUpDown, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { LoadingSpinner } from './LoadingSpinner';
+import type { Order } from '../types/orders';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -81,6 +82,14 @@ export function DataTable<TData, TValue>({
         // Global filter logic
         globalFilterFn: 'includesStringSensitive',
     });
+
+    const onRowClick = (rowId: string) => {
+        const row = table.getRow(rowId);
+        const rowData: Order = row.original as Order;
+        console.log(rowData.action);
+
+
+    }
 
     return (
         <div className="space-y-4 w-full h-full flex flex-col">
@@ -197,7 +206,7 @@ export function DataTable<TData, TValue>({
                             </tr>
                         ) : (
                             table.getRowModel().rows.map((row) => (
-                                <tr key={row.id} className="hover:bg-brand-medium/50 transition-colors">
+                                <tr key={row.id} className="hover:bg-brand-medium/50 transition-colors" onClick={() => onRowClick(row.id)}>
                                     {row.getVisibleCells().map((cell) => (
                                         <td
                                             key={cell.id}

@@ -32,6 +32,16 @@ function App() {
     fetchOrders();
   }, [pagination.pageIndex, pagination.pageSize]);
 
+  // Auto-refresh every 2 minutes
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchOrders();
+    }, 10000); // 120000ms = 2 minutes
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [pagination.pageIndex, pagination.pageSize]);
+
 
   const columns = useMemo<ColumnDef<Order>[]>(() => [
     {
